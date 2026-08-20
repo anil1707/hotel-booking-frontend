@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 
 import Header from "../components/layouts/Header";
 import Footer from "../components/layouts/Footer";
+import Toast from "../components/common/toast/Toast";
 
 const MainLayout = () => {
   return (
@@ -9,12 +10,14 @@ const MainLayout = () => {
       <Header />
 
       <main className="main-content-container">
-        <div style={{width:"80vw"}}>
-        <Outlet />
+        <div className="main-content">
+          <Outlet />
         </div>
       </main>
 
       <Footer />
+
+      <Toast />
     </div>
   );
 };

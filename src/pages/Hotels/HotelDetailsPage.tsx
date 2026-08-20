@@ -15,6 +15,8 @@ import {
 
 import "./HotelDetailPage.css";
 import { useAddFavorite, useFavorites, useRemoveFavorite } from "../../features/favorite/useFavorite";
+import { useHotelReviews } from "../../features/review/useReview";
+import ReviewList from "../../components/review/ReviewList";
 
 const HotelDetailsPage = () => {
   const navigate = useNavigate();
@@ -54,6 +56,21 @@ const HotelDetailsPage = () => {
         guests &&
         rooms
     );
+
+  // --------------------------------
+  // review
+  // --------------------------------
+
+    const {
+  data: reviewsData,
+  isLoading: reviewsLoading,
+  isError: reviewsError,
+} = useHotelReviews(
+  hotelId ?? ""
+);
+
+const reviews =
+  reviewsData?.data ?? [];
 
   // --------------------------------
   // Hotel
@@ -556,43 +573,43 @@ const HotelDetailsPage = () => {
 
         <section className="hotel-reviews-section">
 
-          <div className="reviews-header">
+  <div className="reviews-header">
+    <div>
+      <h2>
+        Reviews
+      </h2>
 
-            <div>
-              <h2>
-                Reviews
-              </h2>
+      <p>
+        ⭐ {hotel.rating} from{" "}
+        {hotel.totalReviews} reviews
+      </p>
+    </div>
+  </div>
 
-              <p>
-                ⭐ {hotel.rating}{" "}
-                from{" "}
-                {hotel.totalReviews}{" "}
-                reviews
-              </p>
-            </div>
+  {reviewsLoading && (
+    <div className="reviews-placeholder">
+      <p>
+        Loading reviews...
+      </p>
+    </div>
+  )}
 
-            <button
-              type="button"
-              className="view-reviews-button"
-              onClick={() =>
-                console.log(
-                  "View all reviews"
-                )
-              }
-            >
-              View all reviews
-            </button>
+  {reviewsError && (
+    <div className="reviews-placeholder">
+      <p>
+        Failed to load reviews.
+      </p>
+    </div>
+  )}
 
-          </div>
+  {!reviewsLoading &&
+    !reviewsError && (
+      <ReviewList
+        reviews={reviews}
+      />
+    )}
 
-          <div className="reviews-placeholder">
-            <p>
-              Recent reviews will appear
-              here.
-            </p>
-          </div>
-
-        </section>
+</section>
 
       </div>
     </main>

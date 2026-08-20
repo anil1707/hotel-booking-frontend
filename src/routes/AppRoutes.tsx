@@ -16,6 +16,7 @@ import BookingConfirmationPage from "../pages/booking/BookingConfirmationpage";
 import MyBookingsPage from "../pages/myBookings/MyBookingPage";
 import BookingDetailPage from "../pages/myBookings/BoookingDetailPage";
 import FavoritesPage from "../pages/favorite/FavoritePage";
+import CreateReviewPage from "../pages/review/ReviewPage";
 
 const AppRoutes = () => {
   return (
@@ -60,19 +61,24 @@ const AppRoutes = () => {
           />
 
           <Route
-  path="/bookings"
-  element={<MyBookingsPage />}
-/>
+            path="/bookings"
+            element={<MyBookingsPage />}
+          />
 
-<Route
-  path="/bookings/:id"
-  element={<BookingDetailPage />}
-/>
+          <Route
+            path="/bookings/:id"
+            element={<BookingDetailPage />}
+          />
           <Route
             path="/favorites"
             element={
-              <FavoritesPage/>
+              <FavoritesPage />
             }
+          />
+
+          <Route
+            path="/hotels/:hotelId/review"
+            element={<CreateReviewPage />}
           />
         </Route>
 

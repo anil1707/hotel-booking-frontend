@@ -3,13 +3,10 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-import {
-  useState,
-} from "react";
+import { useState } from "react";
 
 import * as yup from "yup";
 import { bookingSchema } from "../../validation/bookingSchema";
-
 
 interface BookingState {
   hotelId: string;
@@ -18,49 +15,35 @@ interface BookingState {
 }
 
 const BookingDetailsPage = () => {
-  const location =
-    useLocation();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const navigate =
-    useNavigate();
+  const [errors, setErrors] = useState<
+    Record<string, string>
+  >({});
 
-    const [errors, setErrors] = useState<
-  Record<string, string>
->({});
+  const state = location.state as
+    | BookingState
+    | undefined;
 
-  const state =
-    location.state as
-      | BookingState
-      | undefined;
+  const [checkIn, setCheckIn] =
+    useState("");
 
-  const [
-    checkIn,
-    setCheckIn,
-  ] = useState("");
+  const [checkOut, setCheckOut] =
+    useState("");
 
-  const [
-    checkOut,
-    setCheckOut,
-  ] = useState("");
+  const [guests, setGuests] =
+    useState(1);
 
-  const [
-    guests,
-    setGuests,
-  ] = useState(1);
-
-  const [
-    rooms,
-    setRooms,
-  ] = useState(1);
+  const [rooms, setRooms] =
+    useState(1);
 
   // User opened /booking directly
   if (!state) {
     return (
       <main className="booking-page">
         <div className="booking-container">
-
           <div className="booking-empty">
-
             <h2>
               Booking information not found
             </h2>
@@ -72,251 +55,328 @@ const BookingDetailsPage = () => {
 
             <button
               type="button"
+              className="booking-button"
               onClick={() =>
                 navigate("/hotels")
               }
             >
               Back to hotels
             </button>
-
           </div>
-
         </div>
       </main>
     );
   }
 
   const handleSubmit = async (
-  event: React.FormEvent<HTMLFormElement>
-) => {
-  event.preventDefault();
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
 
-  setErrors({});
+    setErrors({});
 
-  const bookingData = {
-    hotelId: state.hotelId,
-    roomId: state.roomId,
-    checkIn,
-    checkOut,
-    guests,
-    rooms,
-    pricePerNight: state.pricePerNight
-  };
+    const bookingData = {
+      hotelId: state.hotelId,
+      roomId: state.roomId,
+      checkIn,
+      checkOut,
+      guests,
+      rooms,
+      pricePerNight:
+        state.pricePerNight,
+    };
 
-  try {
-    const validatedData =
-      await bookingSchema.validate(
-        bookingData,
-        {
-          abortEarly: false,
-        }
-      );
-
-    console.log(
-      "Validated booking:",
-      validatedData
-    );
-
-    navigate("/booking/summary", {
-      state: validatedData,
-    });
-  } catch (error) {
-    if (
-      error instanceof yup.ValidationError
-    ) {
-      const validationErrors: Record<
-        string,
-        string
-      > = {};
-
-      error.inner.forEach(
-        (validationError) => {
-          if (validationError.path) {
-            validationErrors[
-              validationError.path
-            ] =
-              validationError.message;
+    try {
+      const validatedData =
+        await bookingSchema.validate(
+          bookingData,
+          {
+            abortEarly: false,
           }
+        );
+
+      navigate(
+        "/booking/summary",
+        {
+          state: validatedData,
         }
       );
+    } catch (error) {
+      if (
+        error instanceof
+        yup.ValidationError
+      ) {
+        const validationErrors: Record<
+          string,
+          string
+        > = {};
 
-      setErrors(validationErrors);
+        error.inner.forEach(
+          (validationError) => {
+            if (
+              validationError.path
+            ) {
+              validationErrors[
+                validationError.path
+              ] =
+                validationError.message;
+            }
+          }
+        );
+
+        setErrors(
+          validationErrors
+        );
+      }
     }
-  }
-};
-
-console.log("validaionds", errors)
+  };
 
   return (
     <main className="booking-page">
       <div className="booking-container">
 
-        <div className="booking-header">
+        {/* Back */}
 
-          <button
-            type="button"
-            className="back-link-button"
-            onClick={() =>
-              navigate(-1)
-            }
-          >
-            ← Back
-          </button>
+        <button
+          type="button"
+          className="booking-back-button"
+          onClick={() =>
+            navigate(-1)
+          }
+        >
+          ← Back
+        </button>
 
+        {/* Page Header */}
+
+        <div className="booking-page-header">
           <h1>
             Booking Details
           </h1>
 
           <p>
             Enter your stay details
-            to continue.
+            to continue your booking.
           </p>
-
         </div>
 
-        <form
-          className="booking-form"
-          onSubmit={handleSubmit}
-        >
+        {/* Booking Content */}
 
-          {/* Check-in */}
+        <div className="booking-content">
 
-          <div className="booking-field">
+          {/* Form Card */}
 
-            <label htmlFor="checkIn">
-              Check-in
-            </label>
+          <section className="booking-card">
 
-            <input
-              id="checkIn"
-              type="date"
-              value={checkIn}
-              onChange={(event) =>
-                setCheckIn(
-                  event.target.value
-                )
-              }
-              required
-            />
-            {errors.checkIn && (
-    <span className="field-error">
-      {errors.checkIn}
-    </span>
-  )}
-          </div>
+            <div className="booking-card-header">
+              <h2>
+                Your stay
+              </h2>
 
-          {/* Check-out */}
+              <p>
+                Select your dates and
+                number of guests.
+              </p>
+            </div>
 
-          <div className="booking-field">
-  <label htmlFor="checkOut">
-    Check-out
-  </label>
+            <form
+              className="booking-form"
+              onSubmit={handleSubmit}
+            >
 
-  <input
-    id="checkOut"
-    type="date"
-    value={checkOut}
-    onChange={(event) =>
-      setCheckOut(event.target.value)
-    }
-  />
+              {/* Dates */}
 
-  {errors.checkOut && (
-    <span className="field-error">
-      {errors.checkOut}
-    </span>
-  )}
-</div>
+              <div className="booking-form-row">
 
-          {/* Guests */}
+                <div className="booking-field">
+                  <label htmlFor="checkIn">
+                    Check-in
+                  </label>
 
-          <div className="booking-field">
-  <label htmlFor="guests">
-    Guests
-  </label>
+                  <input
+                    id="checkIn"
+                    type="date"
+                    value={checkIn}
+                    onChange={(event) =>
+                      setCheckIn(
+                        event.target.value
+                      )
+                    }
+                  />
 
-  <input
-    id="guests"
-    type="number"
-    min="1"
-    value={guests}
-    onChange={(event) =>
-      setGuests(
-        Number(event.target.value)
-      )
-    }
-  />
+                  {errors.checkIn && (
+                    <span className="field-error">
+                      {errors.checkIn}
+                    </span>
+                  )}
+                </div>
 
-  {errors.guests && (
-    <span className="field-error">
-      {errors.guests}
-    </span>
-  )}
-</div>
+                <div className="booking-field">
+                  <label htmlFor="checkOut">
+                    Check-out
+                  </label>
 
-          {/* Rooms */}
+                  <input
+                    id="checkOut"
+                    type="date"
+                    value={checkOut}
+                    onChange={(event) =>
+                      setCheckOut(
+                        event.target.value
+                      )
+                    }
+                  />
 
-          <div className="booking-field">
-  <label htmlFor="rooms">
-    Rooms
-  </label>
+                  {errors.checkOut && (
+                    <span className="field-error">
+                      {errors.checkOut}
+                    </span>
+                  )}
+                </div>
 
-  <input
-    id="rooms"
-    type="number"
-    min="1"
-    value={rooms}
-    onChange={(event) =>
-      setRooms(
-        Number(event.target.value)
-      )
-    }
-  />
+              </div>
 
-  {errors.rooms && (
-    <span className="field-error">
-      {errors.rooms}
-    </span>
-  )}
-</div>
+              {/* Guests / Rooms */}
 
-          {/* Selected room */}
+              <div className="booking-form-row">
 
-          <div className="booking-field">
-  <label htmlFor="rooms">
-    Rooms
-  </label>
+                <div className="booking-field">
+                  <label htmlFor="guests">
+                    Guests
+                  </label>
 
-  <input
-    id="rooms"
-    type="number"
-    min="1"
-    value={rooms}
-    onChange={(event) =>
-      setRooms(
-        Number(event.target.value)
-      )
-    }
-  />
+                  <input
+                    id="guests"
+                    type="number"
+                    min="1"
+                    value={guests}
+                    onChange={(event) =>
+                      setGuests(
+                        Number(
+                          event.target.value
+                        )
+                      )
+                    }
+                  />
 
-  {errors.rooms && (
-    <span className="field-error">
-      {errors.rooms}
-    </span>
-  )}
-</div>
+                  {errors.guests && (
+                    <span className="field-error">
+                      {errors.guests}
+                    </span>
+                  )}
+                </div>
 
-          {/* Submit */}
+                <div className="booking-field">
+                  <label htmlFor="rooms">
+                    Rooms
+                  </label>
 
-          <button
-            type="submit"
-            className="continue-booking-button"
-          >
-            Continue
-          </button>
+                  <input
+                    id="rooms"
+                    type="number"
+                    min="1"
+                    value={rooms}
+                    onChange={(event) =>
+                      setRooms(
+                        Number(
+                          event.target.value
+                        )
+                      )
+                    }
+                  />
 
-        </form>
+                  {errors.rooms && (
+                    <span className="field-error">
+                      {errors.rooms}
+                    </span>
+                  )}
+                </div>
 
+              </div>
+
+              {/* Continue */}
+
+              <button
+                type="submit"
+                className="booking-button"
+              >
+                Continue
+              </button>
+
+            </form>
+          </section>
+
+          {/* Booking Summary */}
+
+          <aside className="booking-summary-card">
+
+            <div className="summary-header">
+              <span>
+                Your selection
+              </span>
+            </div>
+
+            <div className="summary-room">
+              <div className="summary-room-icon">
+                🏨
+              </div>
+
+              <div>
+                <h3>
+                  Selected Room
+                </h3>
+
+                <p>
+                  Room selected for
+                  your stay
+                </p>
+              </div>
+            </div>
+
+            <div className="summary-divider" />
+
+            <div className="summary-row">
+              <span>
+                Price per night
+              </span>
+
+              <strong>
+                ₹{state.pricePerNight}
+              </strong>
+            </div>
+
+            <div className="summary-row">
+              <span>
+                Guests
+              </span>
+
+              <strong>
+                {guests}
+              </strong>
+            </div>
+
+            <div className="summary-row">
+              <span>
+                Rooms
+              </span>
+
+              <strong>
+                {rooms}
+              </strong>
+            </div>
+
+            <div className="summary-note">
+              <span>🔒</span>
+
+              <p>
+                Your booking details
+                are secure.
+              </p>
+            </div>
+
+          </aside>
+
+        </div>
       </div>
     </main>
   );

@@ -1,4 +1,5 @@
 import type { Room } from "../../api/hotel.api";
+import './RoomCard.css'
 
 interface RoomCardProps {
   room: Room;

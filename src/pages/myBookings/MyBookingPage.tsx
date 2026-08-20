@@ -310,6 +310,26 @@ const MyBookingsPage = () => {
                           : "Cancel Booking"}
                       </button>
 
+                      {/* {booking.status === "completed" && ( */}
+                        <button
+                          type="button"
+                          className="write-review-button"
+                          onClick={() =>
+                            navigate(
+                              `/hotels/${booking.hotelId._id}/review`,
+                              {
+                                state: {
+                                  bookingId: booking._id,
+                                  hotelId: booking.hotelId._id,
+                                },
+                              }
+                            )
+                          }
+                        >
+                          Write Review
+                        </button>
+                      {/* )} */}
+
                     </div>
 
                   </div>

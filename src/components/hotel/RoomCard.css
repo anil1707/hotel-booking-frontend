@@ -1,0 +1,165 @@
+.room-card {
+  display: flex;
+
+  width: 100%;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  margin-bottom: 20px;
+}
+
+.room-image {
+  width: 260px;
+  min-width: 260px;
+
+  height: 220px;
+
+  object-fit: cover;
+}
+
+.room-content {
+  flex: 1;
+
+  min-width: 0;
+
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.room-content h3 {
+  margin: 0 0 8px;
+
+  font-size: 20px;
+  color: #111827;
+}
+
+.room-description {
+  margin: 0 0 16px;
+
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.room-info {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 16px;
+
+  margin-bottom: 14px;
+
+  font-size: 14px;
+  color: #374151;
+}
+
+.room-amenities {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  margin-bottom: 20px;
+}
+
+.room-amenities span {
+  padding: 5px 10px;
+
+  background: #f3f4f6;
+
+  border-radius: 6px;
+
+  font-size: 13px;
+  color: #374151;
+}
+
+.room-footer {
+  margin-top: auto;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 16px;
+}
+
+.room-footer strong {
+  font-size: 20px;
+  color: #111827;
+}
+
+.room-footer span {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.room-footer button {
+  border: none;
+  border-radius: 8px;
+
+  padding: 12px 20px;
+
+  background: #111827;
+  color: #ffffff;
+
+  font-weight: 600;
+}
+
+.room-footer button:hover {
+  opacity: 0.9;
+}
+
+
+/* =========================
+   Tablet
+========================= */
+
+@media (max-width: 800px) {
+  .room-image {
+    width: 220px;
+    min-width: 220px;
+
+    height: 210px;
+  }
+
+  .room-content {
+    padding: 16px;
+  }
+}
+
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 600px) {
+  .room-card {
+    flex-direction: column;
+  }
+
+  .room-image {
+    width: 100%;
+    min-width: 0;
+
+    height: 200px;
+  }
+
+  .room-content {
+    padding: 16px;
+  }
+
+  .room-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .room-footer button {
+    width: 100%;
+  }
+}

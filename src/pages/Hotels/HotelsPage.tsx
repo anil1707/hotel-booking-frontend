@@ -5,6 +5,7 @@ import {
 import HotelList from "../../components/hotel/HotelList";
 import HotelFilters from "../../components/hotel/HotelFilters";
 import Pagination from "../../components/common/Pagination";
+import './HotelsPage.css'
 
 
 import type {

@@ -12,3 +12,17 @@ export interface Pagination {
   hasNextPage: boolean;
   hasPreviousPage: boolean;
 }
+
+export interface ApiErrorResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface ApiError {
+  response?: {
+    status: number;
+    data?: ApiErrorResponse;
+  };
+
+  message: string;
+}
