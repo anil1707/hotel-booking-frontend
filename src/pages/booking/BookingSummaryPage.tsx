@@ -1,95 +1,203 @@
 import {
   useLocation,
   useNavigate,
-} from "react-router-dom"
-import type { BookingSelection, BookingState } from "../../types/booking";
-import { calculateNights } from "../../utils/date";
+} from "react-router-dom";
 
+import {
+  useCheckAvailability,
+} from "../../features/booking/useBooking";
 
+interface Availability {
+  available: boolean;
+  availableRooms: number;
+  pricePerNight: number;
+  totalNights: number;
+  subtotal: number;
+  taxes: number;
+  totalAmount: number;
+}
+
+export interface BookingSummaryState {
+  hotelId: string;
+  roomId: string;
+  checkIn: string;
+  checkOut: string;
+  guests: number;
+  rooms: number;
+  availability?: Availability;
+}
 
 const BookingSummaryPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const state = location.state as | BookingState | undefined;
+  const {
+    mutateAsync: checkAvailability,
+    isPending,
+  } = useCheckAvailability();
+
+  const state =
+    location.state as
+      | BookingSummaryState
+      | undefined;
 
   if (!state) {
     return (
-      <div className="page-state">
-        <h2>
-          Booking information not found
-        </h2>
+      <main className="booking-page">
+        <div className="booking-container">
+          <h1>
+            Booking information not found
+          </h1>
 
-        <button
-          type="button"
-          onClick={() =>
-            navigate("/hotels")
-          }
-        >
-          Back to hotels
-        </button>
-      </div>
+          <p>
+            Please select a room before
+            continuing.
+          </p>
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/hotels")
+            }
+          >
+            Back to hotels
+          </button>
+        </div>
+      </main>
     );
   }
 
-  const {
-  hotelName,
-  roomName,
-  pricePerNight,
-  checkIn,
-  checkOut,
-  guests,
-  rooms,
-} = state;
+  const handleCheckAvailability =
+    async () => {
+      try {
+        const response =
+          await checkAvailability({
+            hotelId: state.hotelId,
+            roomId: state.roomId,
+            checkIn: state.checkIn,
+            checkOut: state.checkOut,
+            guests: state.guests,
+            rooms: state.rooms,
+          });
 
-const nights =
-  calculateNights(
-    checkIn,
-    checkOut
-  );
+        console.log(
+          "Availability response:",
+          response
+        );
 
-const roomTotal =
-  pricePerNight *
-  nights *
-  rooms;
+        if (!response.success) {
+          return;
+        }
+
+        navigate(
+          "/booking/summary",
+          {
+            replace: true,
+            state: {
+              ...state,
+              availability:
+                response.data,
+            },
+          }
+        );
+      } catch (error) {
+        console.error(
+          "Availability check failed:",
+          error
+        );
+      }
+    };
+
+  const availability =
+    state.availability;
+
+  /*
+   * IMPORTANT
+   *
+   * Replace this with the actual auth
+   * state from your Redux store.
+   *
+   * Example:
+   *
+   * const isAuthenticated = useSelector(
+   *   (state) => state.auth.isAuthenticated
+   * );
+   */
+
+  const isAuthenticated =
+    Boolean(
+      localStorage.getItem("token")
+    );
+
+  const handleConfirmBooking =
+    () => {
+      if (!isAuthenticated) {
+        navigate("/login", {
+          state: {
+            from: "/booking/summary",
+
+            booking: {
+              ...state,
+              availability,
+            },
+          },
+        });
+
+        return;
+      }
+
+      /*
+       * User is already logged in.
+       *
+       * We will call create booking API here.
+       */
+      console.log(
+        "Create booking"
+      );
+    };
 
   return (
-  <main className="booking-page">
-    <div className="booking-container">
+    <main className="booking-page">
+      <div className="booking-container">
 
-      <h1>
-        Booking Summary
-      </h1>
+        <div className="booking-header">
+          <button
+            type="button"
+            className="back-link-button"
+            onClick={() =>
+              navigate(-1)
+            }
+          >
+            ← Back
+          </button>
 
-      <div className="booking-summary">
-
-        <section className="booking-section">
-          <h2>
-            Hotel
-          </h2>
-
-          <h3>
-            {hotelName}
-          </h3>
+          <h1>
+            Booking Summary
+          </h1>
 
           <p>
-            {roomName}
+            Review your booking details
+            before continuing.
           </p>
-        </section>
+        </div>
+
+        {/* Stay Details */}
 
         <section className="booking-section">
+
           <h2>
             Stay Details
           </h2>
 
           <div className="booking-info-grid">
+
             <div>
               <span>
                 Check-in
               </span>
 
               <strong>
-                {checkIn}
+                {state.checkIn}
               </strong>
             </div>
 
@@ -99,7 +207,7 @@ const roomTotal =
               </span>
 
               <strong>
-                {checkOut}
+                {state.checkOut}
               </strong>
             </div>
 
@@ -109,7 +217,7 @@ const roomTotal =
               </span>
 
               <strong>
-                {guests}
+                {state.guests}
               </strong>
             </div>
 
@@ -119,61 +227,143 @@ const roomTotal =
               </span>
 
               <strong>
-                {rooms}
+                {state.rooms}
               </strong>
             </div>
 
-            <div>
+          </div>
+
+        </section>
+
+        {/* Price Details */}
+
+        {availability && (
+          <section className="booking-section">
+
+            <h2>
+              Price Details
+            </h2>
+
+            <div className="summary-row">
+              <span>
+                Price per night
+              </span>
+
+              <strong>
+                ₹
+                {availability.pricePerNight}
+              </strong>
+            </div>
+
+            <div className="summary-row">
               <span>
                 Nights
               </span>
 
               <strong>
-                {nights}
+                {availability.totalNights}
               </strong>
             </div>
-          </div>
-        </section>
 
-        <section className="booking-section">
-          <h2>
-            Price
-          </h2>
+            <div className="summary-row">
+              <span>
+                Subtotal
+              </span>
 
-          <div className="price-row">
-            <span>
-              ₹{pricePerNight} ×{" "}
-              {nights} nights ×{" "}
-              {rooms} room
-            </span>
+              <strong>
+                ₹
+                {availability.subtotal}
+              </strong>
+            </div>
 
-            <strong>
-              ₹{roomTotal}
-            </strong>
-          </div>
+            <div className="summary-row">
+              <span>
+                Taxes
+              </span>
 
-          <div className="price-total">
-            <span>
-              Total
-            </span>
+              <strong>
+                ₹
+                {availability.taxes}
+              </strong>
+            </div>
 
-            <strong>
-              ₹{roomTotal}
-            </strong>
-          </div>
-        </section>
+            <div className="summary-row">
+              <span>
+                Total
+              </span>
 
-        <button
-          type="button"
-          className="continue-booking-button"
-        >
-          Continue Booking
-        </button>
+              <strong>
+                ₹
+                {availability.totalAmount}
+              </strong>
+            </div>
+
+          </section>
+        )}
+
+        {/* Availability */}
+
+        {availability && (
+          <section className="booking-section">
+
+            {availability.available ? (
+              <div>
+                <h3>
+                  Room Available ✓
+                </h3>
+
+                <p>
+                  {
+                    availability.availableRooms
+                  }{" "}
+                  room(s) available.
+                </p>
+              </div>
+            ) : (
+              <div>
+                <h3>
+                  Room Not Available
+                </h3>
+              </div>
+            )}
+
+          </section>
+        )}
+
+        {/* Check Availability */}
+
+        {!availability && (
+          <button
+            type="button"
+            className="continue-booking-button"
+            disabled={isPending}
+            onClick={
+              handleCheckAvailability
+            }
+          >
+            {isPending
+              ? "Checking..."
+              : "Check Availability"}
+          </button>
+        )}
+
+        {/* Confirm Booking */}
+
+        {availability?.available && (
+          <button
+            type="button"
+            className="continue-booking-button"
+            onClick={
+              handleConfirmBooking
+            }
+          >
+            Confirm Booking
+          </button>
+        )}
 
       </div>
-    </div>
-  </main>
-);
+    </main>
+  );
 };
 
 export default BookingSummaryPage;

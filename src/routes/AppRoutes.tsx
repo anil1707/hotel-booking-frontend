@@ -10,6 +10,12 @@ import HotelsPage from "../pages/Hotels/HotelsPage";
 import HotelDetailsPage from "../pages/Hotels/HotelDetailsPage";
 import BookingSummaryPage from "../pages/booking/BookingSummaryPage";
 import BookingDetailsPage from "../pages/booking/BookingDetailPage";
+import LoginPage from "../pages/auth/LoginPage";
+import RegisterPage from "../pages/auth/RegisterPage";
+import BookingConfirmationPage from "../pages/booking/BookingConfirmationpage";
+import MyBookingsPage from "../pages/myBookings/MyBookingPage";
+import BookingDetailPage from "../pages/myBookings/BoookingDetailPage";
+import FavoritesPage from "../pages/favorite/FavoritePage";
 
 const AppRoutes = () => {
   return (
@@ -23,48 +29,62 @@ const AppRoutes = () => {
             element={<HomePage />}
           />
 
-                  <Route
-                      path="/hotels"
-                      element={<HotelsPage />}
-                  />
+          <Route
+            path="/hotels"
+            element={<HotelsPage />}
+          />
 
           <Route
-  path="/hotels/:hotelId"
-  element={
-    <HotelDetailsPage />
-  }
+            path="/hotels/:hotelId"
+            element={
+              <HotelDetailsPage />
+            }
+          />
+
+          <Route
+            path="/booking"
+            element={
+              <BookingDetailsPage />
+            }
+          />
+
+          <Route
+            path="/booking/summary"
+            element={
+              <BookingSummaryPage />
+            }
+          />
+          <Route
+            path="/booking/confirmation/:id"
+            element={<BookingConfirmationPage />}
+          />
+
+          <Route
+  path="/bookings"
+  element={<MyBookingsPage />}
 />
 
 <Route
-  path="/booking"
-  element={
-    <BookingDetailsPage />
-  }
-/>
-
-<Route
-  path="/booking/summary"
-  element={
-    <BookingSummaryPage />
-  }
+  path="/bookings/:id"
+  element={<BookingDetailPage />}
 />
           <Route
             path="/favorites"
             element={
-              <div>Favorites</div>
+              <FavoritesPage/>
             }
           />
         </Route>
 
         <Route
           path="/login"
-          element={<div>Login</div>}
+          element={<LoginPage />}
         />
 
         <Route
           path="/register"
           element={
-            <div>Register</div>
+            <RegisterPage />
           }
         />
       </Routes>

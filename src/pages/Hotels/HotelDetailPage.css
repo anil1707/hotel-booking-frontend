@@ -1,0 +1,68 @@
+.hotel-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.hotel-title-content {
+  flex: 1;
+}
+
+.favorite-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-width: 120px;
+
+  padding: 10px 16px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #374151;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.favorite-button:hover:not(:disabled) {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.favorite-button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.favorite-button.favorite-active {
+  border-color: #dc2626;
+  background: #fff1f2;
+  color: #dc2626;
+}
+
+.favorite-button.favorite-active:hover:not(
+  :disabled
+) {
+  background: #fee2e2;
+}
+
+.favorite-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.favorite-icon {
+  font-size: 21px;
+  line-height: 1;
+}

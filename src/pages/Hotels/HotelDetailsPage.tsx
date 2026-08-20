@@ -12,6 +12,10 @@ import {
   useHotelRooms,
 } from "../../features/hotels/useHotel";
 
+
+import "./HotelDetailPage.css";
+import { useAddFavorite, useFavorites, useRemoveFavorite } from "../../features/favorite/useFavorite";
+
 const HotelDetailsPage = () => {
   const navigate = useNavigate();
 
@@ -40,15 +44,15 @@ const HotelDetailsPage = () => {
     searchParams.get("rooms");
 
   // --------------------------------
-  // Determine which flow we are in
+  // Determine booking flow
   // --------------------------------
 
   const hasBookingDetails =
     Boolean(
       checkIn &&
-      checkOut &&
-      guests &&
-      rooms
+        checkOut &&
+        guests &&
+        rooms
     );
 
   // --------------------------------
@@ -60,9 +64,7 @@ const HotelDetailsPage = () => {
     isLoading: hotelLoading,
     isError: hotelError,
     error: hotelErrorObject,
-  } = useHotel(
-    hotelId ?? ""
-  );
+  } = useHotel(hotelId ?? "");
 
   // --------------------------------
   // Rooms
@@ -72,9 +74,25 @@ const HotelDetailsPage = () => {
     data: roomsData,
     isLoading: roomsLoading,
     isError: roomsError,
-  } = useHotelRooms(
-    hotelId ?? ""
-  );
+  } = useHotelRooms(hotelId ?? "");
+
+  // --------------------------------
+  // Favorites
+  // --------------------------------
+
+  const {
+    data: favoritesData,
+  } = useFavorites();
+
+  const {
+    mutateAsync: addFavorite,
+    isPending: isAddingFavorite,
+  } = useAddFavorite();
+
+  const {
+    mutateAsync: removeFavorite,
+    isPending: isRemovingFavorite,
+  } = useRemoveFavorite();
 
   // --------------------------------
   // Hotel loading
@@ -84,9 +102,7 @@ const HotelDetailsPage = () => {
     return (
       <main className="hotel-details-page">
         <div className="page-state">
-          <h2>
-            Loading hotel...
-          </h2>
+          <p>Loading hotel...</p>
         </div>
       </main>
     );
@@ -105,7 +121,8 @@ const HotelDetailsPage = () => {
           </h2>
 
           <p>
-            {hotelErrorObject instanceof Error
+            {hotelErrorObject instanceof
+            Error
               ? hotelErrorObject.message
               : "Something went wrong"}
           </p>
@@ -122,6 +139,10 @@ const HotelDetailsPage = () => {
       </main>
     );
   }
+
+  // --------------------------------
+  // Hotel data
+  // --------------------------------
 
   const hotel =
     hotelData?.data;
@@ -151,6 +172,49 @@ const HotelDetailsPage = () => {
     roomsData?.data ?? [];
 
   // --------------------------------
+  // Favorite status
+  // --------------------------------
+
+  const isFavorite =
+    favoritesData?.data?.some(
+      (favorite) =>
+        favorite.hotelId._id ===
+        hotel._id
+    ) ?? false;
+
+  const isFavoriteUpdating =
+    isAddingFavorite ||
+    isRemovingFavorite;
+
+  // --------------------------------
+  // Toggle favorite
+  // --------------------------------
+
+  const handleFavoriteToggle =
+    async () => {
+      if (!hotelId) {
+        return;
+      }
+
+      try {
+        if (isFavorite) {
+          await removeFavorite(
+            hotelId
+          );
+        } else {
+          await addFavorite(
+            hotelId
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Favorite action failed:",
+          error
+        );
+      }
+    };
+
+  // --------------------------------
   // Select room
   // --------------------------------
 
@@ -171,7 +235,8 @@ const HotelDetailsPage = () => {
             hotelId:
               hotel._id,
 
-            roomId: room?._id,
+            roomId:
+              room?._id,
 
             checkIn,
             checkOut,
@@ -183,7 +248,9 @@ const HotelDetailsPage = () => {
             rooms: Number(
               rooms
             ),
-            pricePerNight: room?.pricePerNight
+
+            pricePerNight:
+              room?.pricePerNight,
           },
         }
       );
@@ -193,7 +260,7 @@ const HotelDetailsPage = () => {
 
     // --------------------------------
     // FLOW B
-    // User came directly from header
+    // User came directly
     // Booking details don't exist
     // --------------------------------
 
@@ -204,8 +271,11 @@ const HotelDetailsPage = () => {
           hotelId:
             hotel._id,
 
-          roomId: room?._id,
-          pricePerNight: room?.pricePerNight
+          roomId:
+            room?._id,
+
+          pricePerNight:
+            room?.pricePerNight,
         },
       }
     );
@@ -215,7 +285,9 @@ const HotelDetailsPage = () => {
     <main className="hotel-details-page">
       <div className="hotel-details-container">
 
+        {/* -------------------------------- */}
         {/* Back */}
+        {/* -------------------------------- */}
 
         <button
           type="button"
@@ -227,11 +299,14 @@ const HotelDetailsPage = () => {
           ← Back to hotels
         </button>
 
+        {/* -------------------------------- */}
         {/* Hotel Header */}
+        {/* -------------------------------- */}
 
         <div className="hotel-title-section">
 
-          <div>
+          <div className="hotel-title-content">
+
             <h1>
               {hotel.name}
             </h1>
@@ -245,19 +320,67 @@ const HotelDetailsPage = () => {
               {hotel.location?.state &&
                 `, ${hotel.location.state}`}
             </p>
+
           </div>
 
-          <div className="hotel-rating">
-            ⭐ {hotel.rating}
+          <div className="hotel-header-actions">
 
-            <span>
-              ({hotel.totalReviews} reviews)
-            </span>
+            {/* Rating */}
+
+            <div className="hotel-rating">
+              <span>
+                ⭐ {hotel.rating}
+              </span>
+
+              <span>
+                ({hotel.totalReviews}{" "}
+                reviews)
+              </span>
+            </div>
+
+            {/* Favorite */}
+
+            <button
+              type="button"
+              className={`favorite-button ${
+                isFavorite
+                  ? "favorite-active"
+                  : ""
+              }`}
+              onClick={
+                handleFavoriteToggle
+              }
+              disabled={
+                isFavoriteUpdating
+              }
+              aria-label={
+                isFavorite
+                  ? "Remove from favorites"
+                  : "Add to favorites"
+              }
+            >
+              <span className="favorite-icon">
+                {isFavorite
+                  ? "♥"
+                  : "♡"}
+              </span>
+
+              <span>
+                {isFavoriteUpdating
+                  ? "Updating..."
+                  : isFavorite
+                  ? "Saved"
+                  : "Favorite"}
+              </span>
+            </button>
+
           </div>
 
         </div>
 
+        {/* -------------------------------- */}
         {/* Images */}
+        {/* -------------------------------- */}
 
         <HotelImageGallery
           images={
@@ -268,7 +391,9 @@ const HotelDetailsPage = () => {
           }
         />
 
+        {/* -------------------------------- */}
         {/* Hotel Information */}
+        {/* -------------------------------- */}
 
         <div className="hotel-information">
 
@@ -319,7 +444,9 @@ const HotelDetailsPage = () => {
 
         </div>
 
+        {/* -------------------------------- */}
         {/* Rooms */}
+        {/* -------------------------------- */}
 
         <section className="rooms-section">
 
@@ -340,7 +467,10 @@ const HotelDetailsPage = () => {
               !roomsError && (
                 <span>
                   {hotelRooms.length}{" "}
-                  room types
+                  {hotelRooms.length ===
+                  1
+                    ? "room type"
+                    : "room types"}
                 </span>
               )}
 
@@ -376,7 +506,8 @@ const HotelDetailsPage = () => {
 
           {!roomsLoading &&
             !roomsError &&
-            hotelRooms.length === 0 && (
+            hotelRooms.length ===
+              0 && (
               <div className="empty-state">
 
                 <h3>
@@ -396,7 +527,8 @@ const HotelDetailsPage = () => {
 
           {!roomsLoading &&
             !roomsError &&
-            hotelRooms.length > 0 && (
+            hotelRooms.length >
+              0 && (
               <div className="rooms-list">
 
                 {hotelRooms.map(
@@ -418,7 +550,9 @@ const HotelDetailsPage = () => {
 
         </section>
 
+        {/* -------------------------------- */}
         {/* Reviews */}
+        {/* -------------------------------- */}
 
         <section className="hotel-reviews-section">
 
@@ -430,7 +564,8 @@ const HotelDetailsPage = () => {
               </h2>
 
               <p>
-                ⭐ {hotel.rating} from{" "}
+                ⭐ {hotel.rating}{" "}
+                from{" "}
                 {hotel.totalReviews}{" "}
                 reviews
               </p>

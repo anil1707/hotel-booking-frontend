@@ -1,0 +1,265 @@
+.booking-detail-page {
+  min-height: 100vh;
+  padding: 40px 0;
+  background: #f5f7fb;
+}
+
+.booking-detail-container {
+  /* max-width: 850px; */
+  margin: 0 auto;
+}
+
+.back-button {
+  margin-bottom: 25px;
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.booking-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 24px;
+}
+
+.booking-label {
+  display: block;
+  margin-bottom: 6px;
+
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.booking-detail-header h1 {
+  margin: 0;
+
+  color: #111827;
+  font-size: 28px;
+}
+
+.booking-status {
+  padding: 7px 14px;
+
+  border-radius: 20px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  text-transform: capitalize;
+}
+
+.booking-status.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.booking-status.confirmed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.booking-status.cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.booking-status.completed {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.detail-card {
+  margin-bottom: 20px;
+  padding: 24px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
+  box-shadow: 0 4px 16px
+    rgba(0, 0, 0, 0.04);
+}
+
+.detail-card h2 {
+  margin: 0 0 22px;
+
+  color: #111827;
+  font-size: 19px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-item span {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.detail-item strong {
+  color: #111827;
+  font-size: 15px;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 11px 0;
+
+  color: #4b5563;
+  font-size: 14px;
+}
+
+.price-row strong {
+  color: #111827;
+}
+
+.total-row {
+  margin-top: 10px;
+  padding-top: 18px;
+
+  border-top: 1px solid #e5e7eb;
+
+  color: #111827;
+  font-size: 16px;
+}
+
+.total-row strong {
+  color: #2563eb;
+  font-size: 21px;
+}
+
+.payment-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 16px;
+
+  border-radius: 10px;
+  background: #f9fafb;
+}
+
+.payment-box div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.payment-box span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.payment-box > div:last-child {
+  text-align: right;
+}
+
+.payment-box strong {
+  color: #111827;
+  font-size: 16px;
+}
+
+.payment-status {
+  text-transform: capitalize;
+}
+
+.payment-status.paid {
+  color: #15803d !important;
+}
+
+.payment-status.pending {
+  color: #b45309 !important;
+}
+
+.payment-status.failed {
+  color: #dc2626 !important;
+}
+
+.payment-status.refunded {
+  color: #7c3aed !important;
+}
+
+.booking-detail-loading,
+.booking-detail-error {
+  padding: 70px 20px;
+
+  text-align: center;
+
+  background: #ffffff;
+  border-radius: 14px;
+}
+
+.booking-detail-error h2 {
+  margin: 0 0 8px;
+}
+
+.booking-detail-error p {
+  margin-bottom: 20px;
+  color: #6b7280;
+}
+
+.booking-detail-error button {
+  padding: 11px 18px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .booking-detail-page {
+    padding: 25px 15px;
+  }
+
+  .booking-detail-header {
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .booking-detail-header h1 {
+    font-size: 22px;
+  }
+
+  .detail-card {
+    padding: 20px;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 12px;
+  }
+
+  .payment-box {
+    gap: 15px;
+  }
+}
