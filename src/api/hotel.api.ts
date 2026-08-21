@@ -10,13 +10,8 @@ import type {
   HotelSearchParams,
 } from "../types/hotel";
 
-interface HotelDetailsResponse {
-  hotel: Hotel;
-}
-
-
 interface HotelSearchResponse {
-  hotels: Hotel[];
+  data: Hotel[];
   pagination: Pagination;
 }
 
@@ -39,10 +34,7 @@ export const getHotelById = async (
   hotelId: string
 ) => {
   const response =
-    await api.get<{
-      success: boolean;
-      data: HotelDetailsResponse;
-    }>(
+    await api.get<ApiResponse<Hotel>>(
       `/hotels/${hotelId}`
     );
 
@@ -64,14 +56,10 @@ export interface Room {
   status: string;
 }
 
-export const getHotelRooms = async (
-  hotelId: string
-) => {
+export const getHotelRooms = async (hotelId: string) => {
   const response = await api.get<{
     success: boolean;
-    data: {
-      rooms: Room[];
-    };
+    data: Room[];
   }>(`/hotels/${hotelId}/rooms`);
 
   return response.data;

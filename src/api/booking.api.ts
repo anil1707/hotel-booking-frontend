@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import api from "./axios";
 
 export interface CheckAvailabilityPayload {
@@ -51,12 +51,28 @@ export interface CreateBookingPayload {
   rooms: number;
 }
 
+export interface LocationDetails {
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface StayPlace {
+  _id: string;
+  name: string;
+  location: LocationDetails;
+}
+
+
 export interface Booking {
   _id: string;
   bookingNumber: string;
 
   userId: string;
-  hotelId: string;
+  hotelId: StayPlace;
   roomId: string;
 
   checkIn: string;

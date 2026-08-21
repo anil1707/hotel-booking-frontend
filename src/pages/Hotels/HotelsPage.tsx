@@ -259,25 +259,25 @@ const HotelsPage = () => {
         .split(",")
       : [];
 
-  const handleAmenityChange = (
-    amenity: string
-  ) => {
-    const updated =
-      amenities.includes(amenity)
-        ? amenities.filter(
-          (item) =>
-            item !== amenity
-        )
-        : [
-          ...amenities,
-          amenity,
-        ];
+  // const handleAmenityChange = (
+  //   amenity: string
+  // ) => {
+  //   const updated =
+  //     amenities.includes(amenity)
+  //       ? amenities.filter(
+  //         (item) =>
+  //           item !== amenity
+  //       )
+  //       : [
+  //         ...amenities,
+  //         amenity,
+  //       ];
 
-    updateParam(
-      "amenities",
-      updated.join(",")
-    );
-  };
+  //   updateParam(
+  //     "amenities",
+  //     updated.join(",")
+  //   );
+  // };
 
   if (isLoading) {
     return (
@@ -351,7 +351,7 @@ const HotelsPage = () => {
 
           <div className="hotels-results">
             <HotelList
-              hotels={hotels}
+              hotels={Array.isArray(hotels) && hotels?.length > 0 ? hotels : []} 
               searchParams={
                 currentSearch
               }

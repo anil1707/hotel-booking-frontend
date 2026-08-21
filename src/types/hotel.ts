@@ -1,17 +1,26 @@
+interface Location {
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+}
+
 export interface Hotel {
+  location: Location;
   _id: string;
+  ownerId: string;
   name: string;
   description: string;
-  location: {
-    city: string;
-    state?: string;
-    country?: string;
-    address?: string;
-  };
-  amenities: string[];
   images: string[];
+  amenities: string[];
   rating: number;
-  reviewCount: number;
+  totalReviews: number;
+  status: string;
+  __v: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface HotelSearchParams {
@@ -30,4 +39,6 @@ export interface HotelSearchParams {
 
   page?: number;
   limit?: number;
+  minPrice?: number;
+  maxPrice?: number
 }

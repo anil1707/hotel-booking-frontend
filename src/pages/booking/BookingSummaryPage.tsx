@@ -452,7 +452,7 @@ const BookingSummaryPage = () => {
               handleConfirmBooking
             }
           >
-            Confirm Booking
+            {!isCreatingBooking ? "Confirm Booking" : "Confirming..." }
           </button>
 
         )}

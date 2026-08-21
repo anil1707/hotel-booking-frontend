@@ -1,7 +1,6 @@
+import type { Hotel } from "../../types/hotel";
 import HotelCard from "./HotelCard";
 
-import type { Hotel } from "../../types/hotel";
-import { useSearchParams } from "react-router-dom";
 
 interface HotelListProps {
   hotels: Hotel[];
