@@ -1,0 +1,167 @@
+.owner-dashboard {
+  /* width: 100%; */
+}
+
+.owner-dashboard-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 28px;
+}
+
+.owner-dashboard-header h2 {
+  margin: 0 0 6px;
+
+  color: #111827;
+
+  font-size: 26px;
+}
+
+.owner-dashboard-header p {
+  margin: 0;
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+.owner-primary-button {
+  padding: 10px 16px;
+
+  border-radius: 8px;
+
+  background: #111827;
+  color: white;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.owner-primary-button:hover {
+  opacity: 0.9;
+}
+
+.owner-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 16px;
+}
+
+.owner-stat-card {
+  padding: 20px;
+
+  background: white;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 10px;
+}
+
+.owner-stat-card span {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #6b7280;
+
+  font-size: 13px;
+}
+
+.owner-stat-card strong {
+  color: #111827;
+
+  font-size: 26px;
+}
+
+.owner-dashboard-section {
+  margin-top: 28px;
+
+  padding: 24px;
+
+  background: white;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 10px;
+}
+
+.owner-section-header h3 {
+  margin: 0 0 20px;
+
+  color: #111827;
+
+  font-size: 18px;
+}
+
+.owner-quick-actions {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 12px;
+}
+
+.owner-quick-actions a {
+  padding: 16px;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 8px;
+
+  color: #374151;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.owner-quick-actions a:hover {
+  border-color: #111827;
+  color: #111827;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+
+  .owner-stats {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+
+  .owner-dashboard-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .owner-primary-button {
+    width: 100%;
+
+    text-align: center;
+
+    box-sizing: border-box;
+  }
+
+  .owner-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .owner-quick-actions {
+    grid-template-columns: 1fr;
+  }
+}

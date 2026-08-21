@@ -17,6 +17,11 @@ import MyBookingsPage from "../pages/myBookings/MyBookingPage";
 import BookingDetailPage from "../pages/myBookings/BoookingDetailPage";
 import FavoritesPage from "../pages/favorite/FavoritePage";
 import CreateReviewPage from "../pages/review/ReviewPage";
+import OwnerLoginPage from "../pages/owner/auth/OwnerLoginpage";
+import OwnerRegisterPage from "../pages/owner/auth/OwnerRegisterPage";
+import OwnerLayout from "../loyouts/OwnerLayout";
+import OwnerDashboardPage from "../pages/owner/dashboard/OwnerDashboardPage";
+import ProtectedRoute from "./ProtectedRoutes";
 
 const AppRoutes = () => {
   return (
@@ -93,6 +98,35 @@ const AppRoutes = () => {
             <RegisterPage />
           }
         />
+
+        {/* Owner */}
+        <Route
+          path="/owner/login"
+          element={<OwnerLoginPage />}
+        />
+
+        <Route
+          path="/owner/register"
+          element={<OwnerRegisterPage />}
+        />
+
+        <Route
+          element={
+            <ProtectedRoute
+              allowedRoles={["hotel_owner"]}
+            />
+          }
+        >
+          <Route
+            path="/owner"
+            element={<OwnerLayout />}
+          >
+            <Route
+              index
+              element={<OwnerDashboardPage />}
+            />
+          </Route>
+        </Route>
       </Routes>
     </BrowserRouter>
   );

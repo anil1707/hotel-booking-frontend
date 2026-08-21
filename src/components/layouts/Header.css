@@ -31,6 +31,7 @@
 .navigation {
   display: flex;
   align-items: center;
+  justify-content: right;
 
   gap: 24px;
 

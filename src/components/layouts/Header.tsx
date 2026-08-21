@@ -43,13 +43,13 @@ const Header = () => {
             Hotels
           </Link>
 
-          <Link to="/bookings">
+          {isAuthenticated && <Link to="/bookings">
             My Bookings
-          </Link>
+          </Link>}
 
-          <Link to="/favorites">
+         {isAuthenticated && <Link to="/favorites">
             Favorites
-          </Link>
+          </Link>}
         </nav>
 
         {/* Authentication */}

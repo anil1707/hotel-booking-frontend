@@ -1,56 +1,22 @@
 import { useState } from "react";
 import {
   Link,
-  useLocation,
   useNavigate,
 } from "react-router-dom";
 
 import * as yup from "yup";
 
-import { loginSchema } from "../../validation/auth.schema";
 
-import {
-  useAppDispatch,
-} from "../../store/hooks";
 
-import {
-  login,
-} from "../../store/slices/authSlice";
+import "../../../styles/owner/owner-auth.css";
+import { useAppDispatch } from "../../../store/hooks";
+import { useLogin } from "../../../features/auth/useAuth";
+import type { LoginPayload } from "../../../types/auth";
+import { loginSchema } from "../../../validation/auth.schema";
+import { login } from "../../../store/slices/authSlice";
 
-import type { LoginPayload } from "../../types/auth";
-
-import "./AuthPage.css";
-import { useLogin } from "../../features/auth/useAuth";
-
-interface Availability {
-  available: boolean;
-  availableRooms: number;
-  pricePerNight: number;
-  totalNights: number;
-  subtotal: number;
-  taxes: number;
-  totalAmount: number;
-}
-
-interface BookingSummaryState {
-  hotelId: string;
-  roomId: string;
-  checkIn: string;
-  checkOut: string;
-  guests: number;
-  rooms: number;
-  availability?: Availability;
-}
-
-interface LoginLocationState {
-  message?: string;
-  from?: string;
-  booking?: BookingSummaryState;
-}
-
-const LoginPage = () => {
+const OwnerLoginPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const dispatch = useAppDispatch();
 
@@ -71,15 +37,13 @@ const LoginPage = () => {
   const [serverError, setServerError] =
     useState("");
 
-  const loginState =
-    location.state as
-    | LoginLocationState
-    | null;
-
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const { name, value } = event.target;
+    const {
+      name,
+      value,
+    } = event.target;
 
     setFormData((prev) => ({
       ...prev,
@@ -116,57 +80,57 @@ const LoginPage = () => {
           validatedData
         );
 
-      dispatch(
-        login({
-          user: response.data.user,
-          token: response.data.token,
-        })
-      );
+      const user =
+        response.data.user;
 
-      /*
-       * If user came from booking,
-       * return to booking summary.
-       */
       if (
-        loginState?.from &&
-        loginState?.booking
+        !user.roles.includes(
+          "hotel_owner"
+        )
       ) {
-        navigate(
-          loginState.from,
-          {
-            replace: true,
-            state:
-              loginState.booking,
-          }
+        setServerError(
+          "You don't have owner access."
         );
 
         return;
       }
 
-      /*
-       * Normal login.
-       */
-      navigate("/", {
+      dispatch(
+        login({
+          user,
+          token:
+            response.data.token,
+        })
+      );
+
+      navigate("/owner", {
         replace: true,
       });
+
     } catch (error) {
-      if (error instanceof yup.ValidationError) {
-        const validationErrors: Record<
-          string,
-          string
-        > = {};
+      if (
+        error instanceof
+        yup.ValidationError
+      ) {
+        const validationErrors:
+          Record<string, string> = {};
 
         error.inner.forEach(
           (validationError) => {
-            if (validationError.path) {
+            if (
+              validationError.path
+            ) {
               validationErrors[
                 validationError.path
-              ] = validationError.message;
+              ] =
+                validationError.message;
             }
           }
         );
 
-        setErrors(validationErrors);
+        setErrors(
+          validationErrors
+        );
 
         return;
       }
@@ -179,26 +143,19 @@ const LoginPage = () => {
 
   return (
     <div className="auth-page">
+
       <div className="auth-card">
 
         <div className="auth-header">
-          <h1>Welcome Back</h1>
+          <h1>
+            Owner Login
+          </h1>
 
           <p>
-            Login to continue booking
-            your stay.
+            Login to manage your
+            hotel.
           </p>
         </div>
-
-        {/* Registration success */}
-
-        {loginState?.message && (
-          <div className="auth-success">
-            {loginState.message}
-          </div>
-        )}
-
-        {/* Login error */}
 
         {serverError && (
           <div className="auth-error">
@@ -206,9 +163,9 @@ const LoginPage = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
-
-          {/* Email */}
+        <form
+          onSubmit={handleSubmit}
+        >
 
           <div className="form-group">
             <label htmlFor="email">
@@ -219,8 +176,12 @@ const LoginPage = () => {
               id="email"
               type="email"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
+              value={
+                formData.email
+              }
+              onChange={
+                handleChange
+              }
               placeholder="Enter your email"
               autoComplete="email"
             />
@@ -232,8 +193,6 @@ const LoginPage = () => {
             )}
           </div>
 
-          {/* Password */}
-
           <div className="form-group">
             <label htmlFor="password">
               Password
@@ -243,8 +202,12 @@ const LoginPage = () => {
               id="password"
               type="password"
               name="password"
-              value={formData.password}
-              onChange={handleChange}
+              value={
+                formData.password
+              }
+              onChange={
+                handleChange
+              }
               placeholder="Enter your password"
               autoComplete="current-password"
             />
@@ -256,8 +219,6 @@ const LoginPage = () => {
             )}
           </div>
 
-          {/* Submit */}
-
           <button
             type="submit"
             className="auth-button"
@@ -267,30 +228,34 @@ const LoginPage = () => {
               ? "Logging in..."
               : "Login"}
           </button>
+
         </form>
 
         <div className="auth-footer">
           <span>
-            Are you a hotel owner?
+            Don't have an owner
+            account?
           </span>
 
-          <Link to="/owner/login">
-            Owner Login
+          <Link to="/owner/register">
+            Register as a hotel owner
           </Link>
         </div>
 
         <div className="auth-footer">
           <span>
-            Don't have an account?
+            Are you a customer?
           </span>
 
-          <Link to="/register" state={loginState}>
-            Create Account
+          <Link to="/login">
+            Customer Login
           </Link>
         </div>
+
       </div>
+
     </div>
   );
 };
 
-export default LoginPage;
+export default OwnerLoginPage;

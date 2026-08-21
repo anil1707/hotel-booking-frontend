@@ -1,0 +1,173 @@
+.owner-auth-page {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: #f8fafc;
+}
+
+.owner-auth-card {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 36px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.owner-auth-brand {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.owner-auth-brand h1 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.owner-auth-brand span {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #6b7280;
+
+  font-size: 13px;
+}
+
+.owner-auth-header {
+  margin-bottom: 24px;
+}
+
+.owner-auth-header h2 {
+  margin: 0 0 8px;
+
+  color: #111827;
+
+  font-size: 24px;
+}
+
+.owner-auth-header p {
+  margin: 0;
+
+  color: #6b7280;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.owner-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.owner-auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.owner-auth-field label {
+  color: #374151;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.owner-auth-field input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 11px 12px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  outline: none;
+
+  font-size: 14px;
+}
+
+.owner-auth-field input:focus {
+  border-color: #111827;
+}
+
+.owner-auth-button {
+  margin-top: 6px;
+
+  padding: 12px 20px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #111827;
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.owner-auth-button:hover {
+  opacity: 0.9;
+}
+
+.owner-auth-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 6px;
+
+  margin-top: 24px;
+
+  color: #6b7280;
+
+  font-size: 13px;
+}
+
+.owner-auth-footer a {
+  color: #111827;
+
+  font-weight: 600;
+
+  text-decoration: none;
+}
+
+.owner-auth-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .owner-auth-page {
+    padding: 16px;
+  }
+
+  .owner-auth-card {
+    padding: 28px 20px;
+  }
+
+  .owner-auth-brand h1 {
+    font-size: 24px;
+  }
+
+  .owner-auth-header h2 {
+    font-size: 21px;
+  }
+}

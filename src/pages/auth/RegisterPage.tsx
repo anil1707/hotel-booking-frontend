@@ -34,17 +34,17 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-const registerState = location.state as {
-  from?: string;
-  booking?: BookingSummaryState;
-} | null;
+  const registerState = location.state as {
+    from?: string;
+    booking?: BookingSummaryState;
+  } | null;
 
   const {
     mutateAsync: registerUser,
     isPending,
   } = useRegister();
 
-  
+
 
   const [formData, setFormData] =
     useState<RegisterPayload>({
@@ -100,7 +100,7 @@ const registerState = location.state as {
         state: {
           message:
             "Registration successful. Please login.",
-            ...registerState
+          ...registerState
         },
       });
     } catch (error) {
@@ -236,6 +236,16 @@ const registerState = location.state as {
               : "Create Account"}
           </button>
         </form>
+
+        <div className="auth-footer">
+          <span>
+            Are you a hotel owner?
+          </span>
+
+          <Link to="/owner/register">
+            Register as a hotel owner
+          </Link>
+        </div>
 
         <div className="auth-footer">
           <span>
